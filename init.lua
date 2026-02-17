@@ -96,6 +96,9 @@ vim.g.have_nerd_font = false
 -- [[ Setting options ]]
 require 'options'
 
+-- Sets themes for "hover" docs and other popup buffers
+vim.opt.termguicolors = true
+
 -- [[ Basic Keymaps ]]
 require 'keymaps'
 
