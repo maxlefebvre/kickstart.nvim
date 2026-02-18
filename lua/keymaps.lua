@@ -26,6 +26,14 @@ vim.keymap.set('n', '<right>', '<cmd>echo "Use l to move!!"<CR>')
 vim.keymap.set('n', '<up>', '<cmd>echo "Use k to move!!"<CR>')
 vim.keymap.set('n', '<down>', '<cmd>echo "Use j to move!!"<CR>')
 
+vim.keymap.set('n', '<leader>rn', function()
+  if vim.api.nvim_get_option_value('relativenumber', {}) then
+    vim.opt.relativenumber = false
+  else
+    vim.opt.relativenumber = true
+  end
+end)
+
 -- Keybinds to make split navigation easier.
 --  Use CTRL+<hjkl> to switch between windows
 --
