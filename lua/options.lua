@@ -23,6 +23,13 @@ vim.o.showmode = false
 --  See `:help 'clipboard'`
 vim.schedule(function() vim.o.clipboard = 'unnamedplus' end)
 
+-- Some basic tab/spaces stuff
+vim.opt.expandtab = true -- Convert tabs to spaces (Set to false for tabs)
+vim.opt.shiftwidth = 2 -- Size of an indent (This makes them "smaller")
+vim.opt.tabstop = 4 -- Number of spaces a real <Tab> counts for
+vim.opt.softtabstop = 4 -- Number of spaces a <Tab> counts for during editing
+vim.opt.smartindent = true -- Insert indents automatically
+
 -- Enable break indent
 vim.o.breakindent = true
 
