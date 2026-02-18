@@ -47,7 +47,7 @@ vim.keymap.set('n', '<Tab>', '<cmd>BufferLineCycleNext<cr>', { desc = 'Next Tab'
 vim.keymap.set('n', '<S-Tab>', '<cmd>BufferLineCyclePrev<cr>', { desc = 'Prev Tab' })
 -- Select buffer by ordinal number
 for i = 1, 9 do
-  vim.keymap.set('n', '<leader>' .. i, function() require('bufferline').go_to(i, true) end, { desc = 'Go to Tab ' .. i })
+  vim.keymap.set('n', '<leader>' .. i, function() require('bufferline').go_to(i, true) end, { desc = '', silent = true })
 end
 -- Close the current buffer
 vim.keymap.set('n', '<leader>x', '<cmd>bp|sp|bn|bd<cr>', { desc = 'Close Buffer' })
@@ -55,6 +55,23 @@ vim.keymap.set('n', '<leader>x', '<cmd>bp|sp|bn|bd<cr>', { desc = 'Close Buffer'
 -- Toggle File Explorer
 vim.keymap.set('n', '<C-n>', '<cmd>NvimTreeToggle<cr>', { desc = 'Toggle Explorer' })
 
+-- Terminal Split Management
+vim.keymap.set('n', '<leader>th', '<cmd>ToggleTerm direction=horizontal<cr>', { desc = 'Toggle [T]erminal [H]orizontal' })
+vim.keymap.set('n', '<leader>tv', '<cmd>ToggleTerm direction=vertical<cr>', { desc = 'Toggle [T]erminal [V]ertical' })
+vim.keymap.set('n', '<leader>tf', '<cmd>ToggleTerm direction=float<cr>', { desc = 'Toggle [T]erminal [F]loating' })
+
+-- TODO: Resize not working
+-- Resize terminals
+vim.keymap.set('n', '<C-w><Left>', ':resize -5<CR>i', { silent = true })
+vim.keymap.set('n', '<C-w><Right>', ':resize +5<CR>', { silent = true })
+vim.keymap.set('n', '<C-w><Up>', ':vertical resize -5<CR>', { silent = true })
+vim.keymap.set('n', '<C-w><Down>', ':vertical resize -5<cr>', { silent = true })
+-- Same in terminal mode
+vim.keymap.set('t', '<C-w><Left>', ':resize -5<CR>i', { silent = true })
+vim.keymap.set('t', '<C-w><Right>', ':resize +5<CR>', { silent = true })
+vim.keymap.set('t', '<C-w><Up>', ':vertical resize -5<CR>', { silent = true })
+vim.keymap.set('t', '<C-w><Down>', ':vertical resize -5<cr>', { silent = true })
+--
 -- NOTE: Some terminals have colliding keymaps or are not able to send distinct keycodes
 -- vim.keymap.set("n", "<C-S-h>", "<C-w>H", { desc = "Move window to the left" })
 -- vim.keymap.set("n", "<C-S-l>", "<C-w>L", { desc = "Move window to the right" })

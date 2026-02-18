@@ -143,7 +143,7 @@ return {
           --
           -- This may be unwanted, since they displace some of your code
           if client and client:supports_method('textDocument/inlayHint', event.buf) then
-            map('<leader>th', function() vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled { bufnr = event.buf }) end, '[T]oggle Inlay [H]ints')
+            map('<leader>ih', function() vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled { bufnr = event.buf }) end, 'Toggle [I]nlay [H]ints')
           end
         end,
       })
@@ -203,8 +203,8 @@ return {
         --    https://github.com/pmizio/typescript-tools.nvim
         --
         -- But for many setups, the LSP (`ts_ls`) will work just fine
-        ts_ls = {},
-        --
+        -- ts_ls = {},
+        vtsls = {},
 
         lua_ls = {
           -- cmd = { ... },
@@ -233,7 +233,7 @@ return {
       vim.list_extend(ensure_installed, {
         -- LSP Servers
         'lua_ls', -- Lua Language server
-        'gopls',
+        'gopls', -- Go
         'vtsls',
 
         -- Formatters & Linters
