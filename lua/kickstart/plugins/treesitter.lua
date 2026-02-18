@@ -10,6 +10,7 @@ return {
         'css',
         'go',
         'javascript',
+        'jsdoc',
         'lua',
         'luadoc',
         'markdown',
