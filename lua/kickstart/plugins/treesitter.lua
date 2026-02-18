@@ -30,6 +30,8 @@ return {
           local lang = vim.treesitter.language.get_lang(vim.bo[args.buf].filetype)
           -- Only start if a language parser is actually found/installed
           if lang then pcall(vim.treesitter.start, args.buf) end
+          -- This tells Neovim to use Tree-sitter for indentation logic
+          -- vim.bo[args.buf].indentexpr = 'v:lua.vim.treesitter.indent()'
         end,
       })
       -- Use this if above gets glitchy - if you do then make sure filetypes are complete
