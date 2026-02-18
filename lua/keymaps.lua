@@ -61,7 +61,7 @@ end
 vim.keymap.set('n', '<leader>x', '<cmd>bp|sp|bn|bd<cr>', { desc = 'Close Buffer' })
 
 -- Toggle File Explorer
-vim.keymap.set('n', '<C-n>', '<cmd>NvimTreeToggle<cr>', { desc = 'Toggle Explorer' })
+vim.keymap.set('n', '<leader>e', '<cmd>NvimTreeToggle<cr>', { desc = 'Toggle Explorer' })
 
 -- Terminal Split Management
 vim.keymap.set('n', '<leader>th', '<cmd>ToggleTerm direction=horizontal<cr>', { desc = 'Toggle [T]erminal [H]orizontal' })
