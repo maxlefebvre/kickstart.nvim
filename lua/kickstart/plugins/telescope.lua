@@ -87,13 +87,35 @@ return {
       vim.keymap.set('n', '<leader>sh', builtin.help_tags, { desc = '[S]earch [H]elp' })
       vim.keymap.set('n', '<leader>sk', builtin.keymaps, { desc = '[S]earch [K]eymaps' })
       vim.keymap.set('n', '<leader>sf', builtin.find_files, { desc = '[S]earch [F]iles' })
-      vim.keymap.set('n', '<leader>ss', builtin.builtin, { desc = '[S]earch [S]elect Telescope' })
+      vim.keymap.set('n', '<leader>sb', builtin.builtin, { desc = '[S]earch [B]uilt-in' })
       vim.keymap.set('n', '<leader>sw', builtin.grep_string, { desc = '[S]earch current [W]ord' })
-      vim.keymap.set('n', '<leader>sg', builtin.live_grep, { desc = '[S]earch by [G]rep' })
       vim.keymap.set('n', '<leader>sd', builtin.diagnostics, { desc = '[S]earch [D]iagnostics' })
       vim.keymap.set('n', '<leader>sr', builtin.resume, { desc = '[S]earch [R]esume' })
       vim.keymap.set('n', '<leader>s.', builtin.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
       vim.keymap.set('n', '<leader><leader>', builtin.buffers, { desc = '[ ] Find existing buffers' })
+      vim.keymap.set(
+        'n',
+        '<leader>sa',
+        function()
+          builtin.live_grep {
+            prompt_title = 'Seach All (Grep)',
+          }
+        end,
+        { desc = '[S]earch by [A]ll' }
+      )
+
+      vim.keymap.set('n', '<leader>ss', function()
+        builtin.live_grep {
+          prompt_title = 'Seach Sources (Grep)',
+          additional_args = function() return { '--glob', '!**/*test*/**' } end, -- If I still got results, consider adding '!**/*test*' but this will catch things like latest-results.json
+        }
+      end, { desc = '[S]earch [S]ource' })
+      vim.keymap.set('n', '<leader>st', function()
+        builtin.live_grep {
+          prompt_title = 'Seach Tests (Grep)',
+          additional_args = function() return { '--glob', '**/*test*/**' } end,
+        }
+      end, { desc = '[S]earch [T]ests' })
 
       -- Slightly advanced example of overriding default behavior and theme
       vim.keymap.set('n', '<leader>/', function()
