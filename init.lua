@@ -12,7 +12,7 @@ if vim.g.vscode then
   -- Options for vscode
   vim.opt.clipboard = 'unnamedplus'
   vim.opt.shortmess:append 's'
-  vim.opt.cmdheight = 0
+  vim.opt.cmdheight = 50
   require 'lazy-bootstrap'
 
   require('lazy').setup {
