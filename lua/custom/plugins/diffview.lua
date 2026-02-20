@@ -4,6 +4,14 @@ return {
   cmd = { 'DiffviewOpen', 'DiffviewFileHistory' },
   keys = {
     { '<leader>Dd', '<cmd>DiffviewOpen<cr>', desc = 'Diffview: Open Staged' },
+    {
+      '<leader>Db',
+      function()
+        local branch = vim.fn.systemlist('git rev-parse --abbrev-ref HEAD')[1]
+        if branch then vim.cmd('DiffviewOpen origin/' .. branch) end
+      end,
+      desc = 'Diffview: Open vs origin/<branch>',
+    },
     { '<leader>Dm', '<cmd>DiffviewOpen master<cr>', desc = 'Diffview: Open vs master' },
     { '<leader>DM', '<cmd>DiffviewOpen main<cr>', desc = 'Diffview: Open vs main' },
     {
