@@ -26,13 +26,13 @@ vim.keymap.set('n', '<right>', '<cmd>echo "Use l to move!!"<CR>')
 vim.keymap.set('n', '<up>', '<cmd>echo "Use k to move!!"<CR>')
 vim.keymap.set('n', '<down>', '<cmd>echo "Use j to move!!"<CR>')
 
-vim.keymap.set('n', '<leader>rn', function()
-  if vim.api.nvim_get_option_value('relativenumber', {}) then
-    vim.opt.relativenumber = false
-  else
-    vim.opt.relativenumber = true
-  end
-end)
+-- vim.keymap.set('n', '<leader>rn', function()
+--   if vim.api.nvim_get_option_value('relativenumber', {}) then
+--     vim.opt.relativenumber = false
+--   else
+--     vim.opt.relativenumber = true
+--   end
+-- end)
 
 -- Keybinds to make split navigation easier.
 --  Use CTRL+<hjkl> to switch between windows
@@ -49,10 +49,10 @@ vim.keymap.set('n', '<leader>wh', '<cmd>split<cr>', { desc = 'Split Window Horiz
 vim.keymap.set('n', '<leader>wx', '<cmd>close<cr>', { desc = 'Close Current Window' })
 vim.keymap.set('n', '<leader>wo', '<cmd>only<cr>', { desc = 'Close All Other Windows' }) -- "Only" keep this one
 
--- Cycle to next buffer
-vim.keymap.set('n', '<Tab>', '<cmd>BufferLineCycleNext<cr>', { desc = 'Next Tab' })
--- Cycle to previous buffer
-vim.keymap.set('n', '<S-Tab>', '<cmd>BufferLineCyclePrev<cr>', { desc = 'Prev Tab' })
+-- Cycle to buffers
+vim.keymap.set('n', 'gt', '<cmd>BufferLineCycleNext<cr>', { desc = 'Next Tab' })
+vim.keymap.set('n', 'gT', '<cmd>BufferLineCyclePrev<cr>', { desc = 'Prev Tab' })
+
 -- Select buffer by ordinal number
 for i = 1, 9 do
   vim.keymap.set('n', '<leader>' .. i, function() require('bufferline').go_to(i, true) end, { desc = '', silent = true })
