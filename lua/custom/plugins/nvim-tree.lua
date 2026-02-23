@@ -28,6 +28,8 @@ local function my_on_attach(bufnr)
 
   -- Utility
   vim.keymap.set('n', 'R', api.tree.reload, opts 'Refresh Tree')
+  vim.keymap.set('n', 'I', api.tree.toggle_gitignore_filter, opts 'Toggle Git Ignored')
+  vim.keymap.set('n', 'H', api.tree.toggle_hidden_filter, opts 'Toggle Hidden')
   vim.keymap.set('n', '?', api.tree.toggle_help, opts 'Help Menu')
   vim.keymap.set('n', 'q', api.tree.close, opts 'Close Tree')
 end
@@ -54,13 +56,15 @@ return {
         root_folder_label = false,
         group_empty = true,
         highlight_git = true,
+        highlight_hidden = 'name',
         highlight_opened_files = 'none',
         indent_markers = {
           enable = true,
         },
       },
       filters = {
-        dotfiles = true,
+        dotfiles = false,
+        git_ignored = true,
       },
     }
   end,

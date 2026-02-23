@@ -92,6 +92,17 @@ return {
       vim.keymap.set('n', '<leader>sh', builtin.help_tags, { desc = '[S]earch [H]elp' })
       vim.keymap.set('n', '<leader>sk', builtin.keymaps, { desc = '[S]earch [K]eymaps' })
       vim.keymap.set('n', '<leader>sf', builtin.find_files, { desc = '[S]earch [F]iles' })
+      vim.keymap.set(
+        'n',
+        '<leader>sF',
+        function()
+          require('telescope.builtin').find_files {
+            prompt_title = 'Find Files (include hidden)',
+            find_command = { 'fd', '--type', 'f', '--strip-cwd-prefix', '--hidden', '--exclude', '.git' },
+          }
+        end,
+        { desc = '[S]earch [F]iles (with Hidden)' }
+      )
       vim.keymap.set('n', '<leader>sb', builtin.builtin, { desc = '[S]earch [B]uilt-in' })
       vim.keymap.set('n', '<leader>sw', builtin.grep_string, { desc = '[S]earch current [W]ord' })
       vim.keymap.set('n', '<leader>sd', builtin.diagnostics, { desc = '[S]earch [D]iagnostics' })
