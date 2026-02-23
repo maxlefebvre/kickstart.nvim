@@ -23,6 +23,7 @@ return {
         cond = function() return vim.fn.executable 'make' == 1 end,
       },
       { 'nvim-telescope/telescope-ui-select.nvim' },
+      { 'nvim-telescope/telescope-dap.nvim' },
 
       -- Useful for getting pretty icons, but requires a Nerd Font.
       { 'nvim-tree/nvim-web-devicons', enabled = vim.g.have_nerd_font },
@@ -59,7 +60,10 @@ return {
           mappings = {
             i = {
               -- Enter opens the file here
-              ['<CR>'] = actions.select_drop,
+              ['<CR>'] = actions.select_default,
+              -- Open existing file, basically searches for open buffers
+              -- and moves there if it's already open
+              ['<C-o>'] = actions.select_drop,
               -- Standard split mappings
               ['<C-v>'] = actions.select_vertical,
               ['<C-h>'] = actions.select_horizontal,
@@ -73,7 +77,7 @@ return {
         },
         extensions = {
           ['ui-select'] = {
-            require('telescope.themes').get_dropdown(),
+            require('telescope.themes').get_dropdown {},
           },
         },
       }
@@ -81,6 +85,7 @@ return {
       -- Enable Telescope extensions if they are installed
       pcall(require('telescope').load_extension, 'fzf')
       pcall(require('telescope').load_extension, 'ui-select')
+      pcall(require('telescope').load_extension, 'dap')
 
       -- See `:help telescope.builtin`
       local builtin = require 'telescope.builtin'

@@ -23,8 +23,25 @@ return {
 
     -- Add your own debuggers here
     'leoluz/nvim-dap-go',
+    'mxsdev/nvim-dap-vscode-js',
   },
   keys = {
+    -- Tests are a bit funky so we can try and be smart and use this to use the right plugin
+    {
+      '<leader>dt',
+      function()
+        local ft = vim.bo.filetype
+        if ft == 'go' then
+          require('dap-go').debug_test()
+        elseif ft == 'typescript' or ft == 'javascript' then
+          -- If no launch.json, this will prompt you to pick from the configs above
+          require('dap').continue()
+        else
+          require('dap').continue()
+        end
+      end,
+      desc = 'Debug: Smart Test/Continue',
+    },
     -- Basic debugging keymaps, feel free to change to your liking!
     {
       '<F5>',
@@ -81,54 +98,84 @@ return {
       ensure_installed = {
         -- Update this to ensure that you have the debuggers for the langs you want
         'delve',
+        'js-debug-adapter',
       },
     }
-
-    -- Dap UI setup
-    -- For more information, see |:help nvim-dap-ui|
-    dapui.setup {
-      -- Set icons to characters that are more likely to work in every terminal.
-      --    Feel free to remove or use ones that you like more! :)
-      --    Don't feel like these are good choices.
-      icons = { expanded = '▾', collapsed = '▸', current_frame = '*' },
-      controls = {
-        icons = {
-          pause = '⏸',
-          play = '▶',
-          step_into = '⏎',
-          step_over = '⏭',
-          step_out = '⏮',
-          step_back = 'b',
-          run_last = '▶▶',
-          terminate = '⏹',
-          disconnect = '⏏',
-        },
-      },
-    }
-
-    -- Change breakpoint icons
-    -- vim.api.nvim_set_hl(0, 'DapBreak', { fg = '#e51400' })
-    -- vim.api.nvim_set_hl(0, 'DapStop', { fg = '#ffcc00' })
-    -- local breakpoint_icons = vim.g.have_nerd_font
-    --     and { Breakpoint = '', BreakpointCondition = '', BreakpointRejected = '', LogPoint = '', Stopped = '' }
-    --   or { Breakpoint = '●', BreakpointCondition = '⊜', BreakpointRejected = '⊘', LogPoint = '◆', Stopped = '⭔' }
-    -- for type, icon in pairs(breakpoint_icons) do
-    --   local tp = 'Dap' .. type
-    --   local hl = (type == 'Stopped') and 'DapStop' or 'DapBreak'
-    --   vim.fn.sign_define(tp, { text = icon, texthl = hl, numhl = hl })
-    -- end
-
-    dap.listeners.after.event_initialized['dapui_config'] = dapui.open
-    dap.listeners.before.event_terminated['dapui_config'] = dapui.close
-    dap.listeners.before.event_exited['dapui_config'] = dapui.close
 
     -- Install golang specific config
     require('dap-go').setup {
       delve = {
+        path = vim.fn.stdpath 'data' .. '/mason/bin/dlv',
         -- On Windows delve must be run attached or it crashes.
         -- See https://github.com/leoluz/nvim-dap-go/blob/main/README.md#configuring
         detached = vim.fn.has 'win32' == 0,
       },
     }
+
+    dap.configurations.go = {
+      {
+        type = 'go',
+        name = 'Debug (Launch)',
+        request = 'launch',
+        program = './${relativeFileDirname}', -- Works for standard package layouts
+      },
+      {
+        type = 'go',
+        name = 'Debug Test',
+        request = 'launch',
+        mode = 'test',
+        program = './${relativeFileDirname}', -- Or use "./"
+      },
+    }
+
+    -- Install node specific debugger
+    require('dap-vscode-js').setup {
+      node_path = 'node',
+      debugger_path = vim.fn.stdpath 'data' .. '/mason/packages/js-debug-adapter',
+      adapters = { 'pwa-node', 'pwa-chrome', 'pwa-msedge', 'node-terminal', 'pwa-extensionHost' },
+    }
+
+    -- Language setup if the default_setup doesn't work
+    local js_languages = { 'javascript', 'typescript', 'javascriptreact', 'typescriptreact' }
+
+    for _, language in ipairs(js_languages) do
+      dap.configurations[language] = {
+        {
+          type = 'pwa-node',
+          request = 'launch',
+          name = 'Launch file',
+          program = '${file}',
+          cwd = '${workspaceFolder}',
+        },
+        {
+          type = 'pwa-node',
+          request = 'attach',
+          name = 'Attach',
+          -- processId = require('dap.utils').pick_process,
+          -- Replace your current processId line with this:
+          processId = function() return require('dap.utils').pick_process() end,
+          cwd = '${workspaceFolder}',
+        },
+      }
+    end
+    -- Dap UI setup
+    -- For more information, see |:help nvim-dap-ui|
+    dapui.setup()
+
+    -- Change breakpoint icons
+    vim.api.nvim_set_hl(0, 'DapBreak', { fg = '#e51400' })
+    vim.api.nvim_set_hl(0, 'DapStop', { fg = '#ffcc00' })
+    local breakpoint_icons = vim.g.have_nerd_font
+        and { Breakpoint = '', BreakpointCondition = '', BreakpointRejected = '', LogPoint = '', Stopped = '' }
+      or { Breakpoint = '●', BreakpointCondition = '⊜', BreakpointRejected = '⊘', LogPoint = '◆', Stopped = '⭔' }
+    for type, icon in pairs(breakpoint_icons) do
+      local tp = 'Dap' .. type
+      local hl = (type == 'Stopped') and 'DapStop' or 'DapBreak'
+      vim.fn.sign_define(tp, { text = icon, texthl = hl, numhl = hl })
+    end
+
+    dap.listeners.after.event_initialized['dapui_config'] = dapui.open
+    dap.listeners.before.event_terminated['dapui_config'] = dapui.close
+    dap.listeners.before.event_exited['dapui_config'] = dapui.close
   end,
 }
