@@ -23,7 +23,6 @@ return {
 
     -- Add your own debuggers here
     'leoluz/nvim-dap-go',
-    'mxsdev/nvim-dap-vscode-js',
   },
   keys = {
     -- Tests are a bit funky so we can try and be smart and use this to use the right plugin
@@ -95,6 +94,7 @@ return {
 
       -- You'll need to check that you have the required things installed
       -- online, please don't ask me how to install them :)
+      -- TODO: This really doesn't seem to install anything on start
       ensure_installed = {
         -- Update this to ensure that you have the debuggers for the langs you want
         'delve',
@@ -105,7 +105,7 @@ return {
     -- Install golang specific config
     require('dap-go').setup {
       delve = {
-        path = vim.fn.stdpath 'data' .. '/mason/bin/dlv',
+        path = 'dlv',
         -- On Windows delve must be run attached or it crashes.
         -- See https://github.com/leoluz/nvim-dap-go/blob/main/README.md#configuring
         detached = vim.fn.has 'win32' == 0,
@@ -129,15 +129,20 @@ return {
     }
 
     -- Install node specific debugger
-    require('dap-vscode-js').setup {
-      node_path = 'node',
-      debugger_path = vim.fn.stdpath 'data' .. '/mason/packages/js-debug-adapter',
-      adapters = { 'pwa-node', 'pwa-chrome', 'pwa-msedge', 'node-terminal', 'pwa-extensionHost' },
+    dap.adapters['pwa-node'] = {
+      type = 'server',
+      host = 'localhost',
+      port = '${port}', -- nvim-dap will automatically assign a random available port
+      executable = {
+        command = 'node',
+        args = {
+          vim.fn.stdpath 'data' .. '/mason/packages/js-debug-adapter/js-debug/src/dapDebugServer.js',
+          '${port}',
+        },
+      },
     }
-
     -- Language setup if the default_setup doesn't work
     local js_languages = { 'javascript', 'typescript', 'javascriptreact', 'typescriptreact' }
-
     for _, language in ipairs(js_languages) do
       dap.configurations[language] = {
         {
@@ -151,9 +156,8 @@ return {
           type = 'pwa-node',
           request = 'attach',
           name = 'Attach',
-          -- processId = require('dap.utils').pick_process,
           -- Replace your current processId line with this:
-          processId = function() return require('dap.utils').pick_process() end,
+          processId = require('dap.utils').pick_process,
           cwd = '${workspaceFolder}',
         },
       }
