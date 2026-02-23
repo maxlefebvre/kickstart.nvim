@@ -6,6 +6,8 @@
 -- be extended to other languages as well. That's why it's called
 -- kickstart.nvim and not kitchen-sink.nvim ;)
 
+-- TODO: Review this https://github.com/nikolovlazar/dotfiles/blob/main/.config/nvim/lua/plugins/dap/core.lua
+
 return {
   -- NOTE: Yes, you can install new plugins here!
   'mfussenegger/nvim-dap',
