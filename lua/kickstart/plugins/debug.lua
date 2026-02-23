@@ -162,6 +162,10 @@ return {
         },
       }
     end
+    require('dap.ext.vscode').load_launchjs(nil, {
+      ['pwa-node'] = js_languages,
+      ['go'] = { 'go' },
+    })
     -- Dap UI setup
     -- For more information, see |:help nvim-dap-ui|
     dapui.setup()
