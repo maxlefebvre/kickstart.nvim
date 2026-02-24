@@ -50,8 +50,12 @@ vim.keymap.set('n', '<leader>wx', '<cmd>close<cr>', { desc = 'Close Current Wind
 vim.keymap.set('n', '<leader>wo', '<cmd>only<cr>', { desc = 'Close All Other Windows' }) -- "Only" keep this one
 
 -- Cycle to buffers
-vim.keymap.set('n', 'gt', '<cmd>BufferLineCycleNext<cr>', { desc = 'Next Tab' })
-vim.keymap.set('n', 'gT', '<cmd>BufferLineCyclePrev<cr>', { desc = 'Prev Tab' })
+vim.keymap.set('n', '>', '<cmd>BufferLineCycleNext<cr>', { desc = 'Next Tab' })
+vim.keymap.set('n', '<', '<cmd>BufferLineCyclePrev<cr>', { desc = 'Prev Tab' })
+
+-- Move buffer
+vim.keymap.set('n', 'mt', '<cmd>BufferLineMoveNext<cr>', { desc = 'Move Tab Right' })
+vim.keymap.set('n', 'mT', '<cmd>BufferLineMovePrev<cr>', { desc = 'Move Tab Left' })
 
 -- Select buffer by ordinal number
 for i = 1, 9 do
