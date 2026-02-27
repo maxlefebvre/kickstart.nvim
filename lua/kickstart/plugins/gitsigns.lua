@@ -18,6 +18,15 @@ return {
     'lewis6991/gitsigns.nvim',
     opts = {
       signs = {
+        -- Lines
+        -- add = { text = '│' }, -- Try '∣' if you want it even thinner
+        -- change = { text = '│' },
+        -- delete = { text = '_' },
+        -- topdelete = { text = '‾' },
+        -- changedelete = { text = '~' },
+        -- untracked = { text = '┆' },
+
+        -- Symbols
         add = { text = '+' },
         change = { text = '~' },
         delete = { text = '_' },
@@ -26,6 +35,14 @@ return {
       },
       on_attach = function(bufnr)
         local gitsigns = require 'gitsigns'
+
+        -- Colours (tokyonight-storm esque)
+        vim.api.nvim_set_hl(0, 'GitSignsAdd', { fg = '#73daca' }) -- Green
+        -- vim.api.nvim_set_hl(0, 'GitSignsAdd', { fg = '#00ff00' }) -- Green
+        vim.api.nvim_set_hl(0, 'GitSignsChange', { fg = '#e0af68' }) -- Yellow/Orange
+        -- vim.api.nvim_set_hl(0, 'GitSignsChange', { fg = '#fabd2f' }) -- Yellow/Orange
+        vim.api.nvim_set_hl(0, 'GitSignsDelete', { fg = '#f7768e' }) -- Red
+        -- vim.api.nvim_set_hl(0, 'GitSignsDelete', { fg = '#fb4934' }) -- Red
 
         local function map(mode, l, r, opts)
           opts = opts or {}
