@@ -24,6 +24,7 @@ return {
       },
       { 'nvim-telescope/telescope-ui-select.nvim' },
       { 'nvim-telescope/telescope-dap.nvim' },
+      { 'nvim-telescope/telescope-live-grep-args.nvim' },
 
       -- Useful for getting pretty icons, but requires a Nerd Font.
       { 'nvim-tree/nvim-web-devicons', enabled = vim.g.have_nerd_font },
@@ -49,10 +50,13 @@ return {
       -- do as well as how to actually do it!
 
       -- [[ Configure Telescope ]]
-      -- See `:help telescope` and `:help telescope.setup()`
+      -- See `:help telescope` and `:help telescope.setup()`
 
       local actions = require 'telescope.actions'
-      require('telescope').setup {
+      local telescope = require 'telescope'
+      local lga_actions = require 'telescope-live-grep-args.actions'
+
+      telescope.setup {
         -- You can put your default mappings / updates / etc. in here
         --  All the info you're looking for is in `:help telescope.setup()`
         --
@@ -64,7 +68,7 @@ return {
               -- Open existing file, basically searches for open buffers
               -- and moves there if it's already open
               ['<C-o>'] = actions.select_drop,
-              -- Standard split mappings
+              -- Standard split mapping
               ['<C-v>'] = actions.select_vertical,
               ['<C-h>'] = actions.select_horizontal,
             },
@@ -79,18 +83,37 @@ return {
           ['ui-select'] = {
             require('telescope.themes').get_dropdown {},
           },
+          live_grep_args = {
+            auto_quoting = true, -- TODO: Not sure if I want this yet
+            mappings = {
+              i = {
+                ['<C-k>'] = lga_actions.quote_prompt(),
+                ['<C-i>'] = lga_actions.quote_prompt { postfix = ' --iglob ' },
+              },
+            },
+          },
         },
       }
 
       -- Enable Telescope extensions if they are installed
-      pcall(require('telescope').load_extension, 'fzf')
-      pcall(require('telescope').load_extension, 'ui-select')
-      pcall(require('telescope').load_extension, 'dap')
+      pcall(telescope.load_extension, 'fzf')
+      pcall(telescope.load_extension, 'ui-select')
+      pcall(telescope.load_extension, 'dap')
+      pcall(telescope.load_extension 'live_grep_args')
 
       -- See `:help telescope.builtin`
       local builtin = require 'telescope.builtin'
+      -- Utility
       vim.keymap.set('n', '<leader>sh', builtin.help_tags, { desc = '[S]earch [H]elp' })
       vim.keymap.set('n', '<leader>sk', builtin.keymaps, { desc = '[S]earch [K]eymaps' })
+      vim.keymap.set('n', '<leader>sb', builtin.builtin, { desc = '[S]earch [B]uilt-in' })
+      vim.keymap.set('n', '<leader>sw', builtin.grep_string, { desc = '[S]earch current [W]ord' })
+      vim.keymap.set('n', '<leader>sd', builtin.diagnostics, { desc = '[S]earch [D]iagnostics' })
+      vim.keymap.set('n', '<leader>sr', builtin.resume, { desc = '[S]earch [R]esume' })
+      vim.keymap.set('n', '<leader>s.', builtin.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
+      vim.keymap.set('n', '<leader><leader>', builtin.buffers, { desc = '[ ] Find existing buffers' })
+
+      -- File searches
       vim.keymap.set('n', '<leader>sf', builtin.find_files, { desc = '[S]earch [F]iles' })
       vim.keymap.set(
         'n',
@@ -103,12 +126,9 @@ return {
         end,
         { desc = '[S]earch [F]iles (with Hidden)' }
       )
-      vim.keymap.set('n', '<leader>sb', builtin.builtin, { desc = '[S]earch [B]uilt-in' })
-      vim.keymap.set('n', '<leader>sw', builtin.grep_string, { desc = '[S]earch current [W]ord' })
-      vim.keymap.set('n', '<leader>sd', builtin.diagnostics, { desc = '[S]earch [D]iagnostics' })
-      vim.keymap.set('n', '<leader>sr', builtin.resume, { desc = '[S]earch [R]esume' })
-      vim.keymap.set('n', '<leader>s.', builtin.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
-      vim.keymap.set('n', '<leader><leader>', builtin.buffers, { desc = '[ ] Find existing buffers' })
+
+      -- Grep searches
+      vim.keymap.set('n', '<leader>sg', function() telescope.extensions.live_grep_args.live_grep_args() end, { desc = '[S]earch [G]rep (Args)' })
       vim.keymap.set(
         'n',
         '<leader>sa',
@@ -119,7 +139,6 @@ return {
         end,
         { desc = '[S]earch by [A]ll' }
       )
-
       vim.keymap.set('n', '<leader>ss', function()
         builtin.live_grep {
           prompt_title = 'Seach Sources (Grep)',

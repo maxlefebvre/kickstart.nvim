@@ -6,18 +6,12 @@
 -- be extended to other languages as well. That's why it's called
 -- kickstart.nvim and not kitchen-sink.nvim ;)
 
--- TODO: Review this https://github.com/nikolovlazar/dotfiles/blob/main/.config/nvim/lua/plugins/dap/core.lua
-
 return {
   -- NOTE: Yes, you can install new plugins here!
   'mfussenegger/nvim-dap',
   -- NOTE: And you can specify dependencies as well
   dependencies = {
-    -- Creates a beautiful debugger UI
-    'rcarriga/nvim-dap-ui',
-
-    -- Required dependency for nvim-dap-ui
-    'nvim-neotest/nvim-nio',
+    'igorlfs/nvim-dap-view',
 
     -- Installs the debug adapters for you
     'mason-org/mason.nvim',
@@ -74,16 +68,10 @@ return {
       function() require('dap').set_breakpoint(vim.fn.input 'Breakpoint condition: ') end,
       desc = 'Debug: Set Breakpoint',
     },
-    -- Toggle to see last session result. Without this, you can't see session output in case of unhandled exception.
-    {
-      '<F7>',
-      function() require('dapui').toggle() end,
-      desc = 'Debug: See last session result.',
-    },
   },
   config = function()
     local dap = require 'dap'
-    local dapui = require 'dapui'
+    -- local dapui = require 'dapui'
 
     require('mason-nvim-dap').setup {
       -- Makes a best effort to setup the various debuggers with
@@ -96,7 +84,6 @@ return {
 
       -- You'll need to check that you have the required things installed
       -- online, please don't ask me how to install them :)
-      -- TODO: This really doesn't seem to install anything on start
       ensure_installed = {
         -- Update this to ensure that you have the debuggers for the langs you want
         'delve',
@@ -168,9 +155,15 @@ return {
       ['pwa-node'] = js_languages,
       ['go'] = { 'go' },
     })
-    -- Dap UI setup
-    -- For more information, see |:help nvim-dap-ui|
-    dapui.setup()
+
+    -- Dap View -  https://igorlfs.github.io/nvim-dap-view/configuration
+    require('dap-view').setup { auto_toggle = true, winbar = { show = true } }
+    vim.keymap.set('n', '<leader>dw', function()
+      local word = vim.fn.expand '<cword>'
+      vim.cmd('DapViewWatch ' .. word)
+      -- Optional: print a message so you know it worked
+      vim.notify('Watching: ' .. word, vim.log.levels.INFO)
+    end, { desc = 'Debug: Watch word under cursor' })
 
     -- Change breakpoint icons
     vim.api.nvim_set_hl(0, 'DapBreak', { fg = '#e51400' })
@@ -183,9 +176,5 @@ return {
       local hl = (type == 'Stopped') and 'DapStop' or 'DapBreak'
       vim.fn.sign_define(tp, { text = icon, texthl = hl, numhl = hl })
     end
-
-    dap.listeners.after.event_initialized['dapui_config'] = dapui.open
-    dap.listeners.before.event_terminated['dapui_config'] = dapui.close
-    dap.listeners.before.event_exited['dapui_config'] = dapui.close
   end,
 }
