@@ -66,6 +66,7 @@ return {
         { '<leader>t', group = '[T]erminal' },
         { '<leader>i', group = '[I]nlay Hints' },
         { '<leader>D', group = '[D]iffView' },
+        { '<leader>d', group = '[d]ebug & [d]iagnostics' },
 
         -- Disable the tab (1-9) selectors
         { '<leader>1', hidden = true },
@@ -77,6 +78,10 @@ return {
         { '<leader>7', hidden = true },
         { '<leader>8', hidden = true },
         { '<leader>9', hidden = true },
+        { '<leader>9', hidden = true },
+        -- These are for breakpoints, I won't forget them
+        { '<leader>b', hidden = true },
+        { '<leader>B', hidden = true },
       },
     },
   },
