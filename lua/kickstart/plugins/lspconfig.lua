@@ -19,7 +19,9 @@ return {
       -- Automatically install LSPs and related tools to stdpath for Neovim
       -- Mason must be loaded before its dependents so we need to set it up here.
       -- NOTE: `opts = {}` is the same as calling `require('mason').setup({})`
-      { 'mason-org/mason.nvim', opts = {} },
+      { 'mason-org/mason.nvim', opts = {
+        log_level = vim.log.levels.DEBUG,
+      } },
       'mason-org/mason-lspconfig.nvim',
       'WhoIsSethDaniel/mason-tool-installer.nvim',
 
@@ -204,7 +206,17 @@ return {
         --
         -- But for many setups, the LSP (`ts_ls`) will work just fine
         -- ts_ls = {},
-        vtsls = {},
+        vtsls = {
+          command = { 'vtsls' },
+          settings = {
+            typescript = {
+              npm = vim.fn.exepath 'npm',
+            },
+            javascript = {
+              npm = vim.fn.exepath 'npm',
+            },
+          },
+        },
 
         lua_ls = {
           -- cmd = { ... },
@@ -234,7 +246,7 @@ return {
         -- LSP Servers
         'lua_ls', -- Lua Language server
         'gopls', -- Go
-        'vtsls',
+        'vtsls', -- JS/TS
 
         -- Formatters & Linters
         'stylua', -- Used to format Lua code

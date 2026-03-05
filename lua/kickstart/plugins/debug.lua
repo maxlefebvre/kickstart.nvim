@@ -23,7 +23,7 @@ return {
   keys = {
     -- Tests are a bit funky so we can try and be smart and use this to use the right plugin
     {
-      '<leader>dt',
+      '<leader>Dt',
       function()
         local ft = vim.bo.filetype
         if ft == 'go' then
@@ -120,45 +120,57 @@ return {
     -- Install node specific debugger
     dap.adapters['pwa-node'] = {
       type = 'server',
-      host = 'localhost',
+      host = '127.0.0.1',
       port = '${port}', -- nvim-dap will automatically assign a random available port
       executable = {
         command = 'node',
         args = {
           vim.fn.stdpath 'data' .. '/mason/packages/js-debug-adapter/js-debug/src/dapDebugServer.js',
           '${port}',
+          '127.0.0.1', -- Force ipv4, or else nvim might not be happy
         },
       },
     }
-    -- Language setup if the default_setup doesn't work
+    -- Map it to `node` as well for vscode compat
+    dap.adapters['node'] = dap.adapters['pwa-node']
+
+    -- 1. Initialize your custom Neovim-only configurations
     local js_languages = { 'javascript', 'typescript', 'javascriptreact', 'typescriptreact' }
     for _, language in ipairs(js_languages) do
       dap.configurations[language] = {
         {
-          type = 'pwa-node',
-          request = 'launch',
-          name = 'Launch file',
-          program = '${file}',
-          cwd = '${workspaceFolder}',
-        },
-        {
+          name = 'Attach Local (nvim)',
           type = 'pwa-node',
           request = 'attach',
-          name = 'Attach',
-          -- Replace your current processId line with this:
-          processId = require('dap.utils').pick_process,
+          address = '127.0.0.1',
+          port = 5858,
+          console = 'integratedTerminal',
           cwd = '${workspaceFolder}',
+          skipFiles = {
+            '<node_internals>/**',
+            '**/node_modules/**',
+          },
         },
       }
     end
-    require('dap.ext.vscode').load_launchjs(nil, {
-      ['pwa-node'] = js_languages,
-      ['go'] = { 'go' },
-    })
+
+    -- 2. Load the team's launch.json using DAP's built-in defaults.
+    -- Passing no arguments prevents the duplication bug!
+    require('dap.ext.vscode').load_launchjs()
+
+    -- 3. VS Code Magic: Silently upgrade all legacy 'node' configs to 'pwa-node' in memory.
+    -- This guarantees the team's configs work without needing adapter aliases.
+    for _, language in ipairs(js_languages) do
+      if dap.configurations[language] then
+        for _, config in ipairs(dap.configurations[language]) do
+          if config.type == 'node' then config.type = 'pwa-node' end
+        end
+      end
+    end
 
     -- Dap View -  https://igorlfs.github.io/nvim-dap-view/configuration
     require('dap-view').setup { auto_toggle = true, winbar = { show = true } }
-    vim.keymap.set('n', '<leader>dw', function()
+    vim.keymap.set('n', '<leader>w', function()
       local word = vim.fn.expand '<cword>'
       vim.cmd('DapViewWatch ' .. word)
       -- Optional: print a message so you know it worked

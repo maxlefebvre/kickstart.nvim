@@ -3,19 +3,19 @@ return {
   dependencies = 'nvim-lua/plenary.nvim',
   cmd = { 'DiffviewOpen', 'DiffviewFileHistory' },
   keys = {
-    { '<leader>Dd', '<cmd>DiffviewOpen<cr>', desc = 'Diffview: Open Staged' },
+    { '<leader>dd', '<cmd>DiffviewOpen<cr>', desc = 'Diffview: Open Staged' },
     {
-      '<leader>Db',
+      '<leader>db',
       function()
         local branch = vim.fn.systemlist('git rev-parse --abbrev-ref HEAD')[1]
         if branch then vim.cmd('DiffviewOpen origin/' .. branch) end
       end,
       desc = 'Diffview: Open vs origin/<branch>',
     },
-    { '<leader>Dm', '<cmd>DiffviewOpen master<cr>', desc = 'Diffview: Open vs master' },
-    { '<leader>DM', '<cmd>DiffviewOpen main<cr>', desc = 'Diffview: Open vs main' },
+    { '<leader>dm', '<cmd>DiffviewOpen master<cr>', desc = 'Diffview: Open vs master' },
+    { '<leader>dM', '<cmd>DiffviewOpen main<cr>', desc = 'Diffview: Open vs main' },
     {
-      '<leader>Dp',
+      '<leader>dp',
       function()
         local branch = vim.fn.input('Compare with; ', 'master')
         if branch ~= '' then vim.cmd('DiffviewOpen ' .. branch) end

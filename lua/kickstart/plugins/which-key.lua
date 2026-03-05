@@ -65,8 +65,8 @@ return {
         { '<leader>w', group = '[W]indow' },
         { '<leader>t', group = '[T]erminal' },
         { '<leader>i', group = '[I]nlay Hints' },
-        { '<leader>D', group = '[D]iffView' },
-        { '<leader>d', group = '[d]ebug & [d]iagnostics' },
+        { '<leader>d', group = '[d]iffView' },
+        { '<leader>D', group = '[D]ebug & [d]iagnostics' },
 
         -- Disable the tab (1-9) selectors
         { '<leader>1', hidden = true },
