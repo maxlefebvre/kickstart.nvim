@@ -44,10 +44,10 @@ vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower win
 vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
 
 -- Split management
-vim.keymap.set('n', '<leader>wv', '<cmd>vsplit<cr>', { desc = 'Split Window Vertically' })
-vim.keymap.set('n', '<leader>wh', '<cmd>split<cr>', { desc = 'Split Window Horizontally' })
-vim.keymap.set('n', '<leader>wx', '<cmd>close<cr>', { desc = 'Close Current Window' })
-vim.keymap.set('n', '<leader>wo', '<cmd>only<cr>', { desc = 'Close All Other Windows' }) -- "Only" keep this one
+-- vim.keymap.set('n', '<leader>wv', '<cmd>vsplit<cr>', { desc = 'Split Window Vertically' })
+-- vim.keymap.set('n', '<leader>wh', '<cmd>split<cr>', { desc = 'Split Window Horizontally' })
+-- vim.keymap.set('n', '<leader>wx', '<cmd>close<cr>', { desc = 'Close Current Window' })
+-- vim.keymap.set('n', '<leader>wo', '<cmd>only<cr>', { desc = 'Close All Other Windows' }) -- "Only" keep this one
 
 -- Cycle to buffers
 vim.keymap.set('n', '>', '<cmd>BufferLineCycleNext<cr>', { desc = 'Next Tab' })
